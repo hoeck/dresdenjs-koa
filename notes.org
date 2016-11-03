@@ -1,0 +1,106 @@
+* presentation environment
+- slides: revealjs + presenter view
+- examples/live-coding
+  - custom emacs profile with larger default fontsize, neotree,
+  - one file per example, nodejs + babel for import statements
+  - window split in 3 parts: editor, terminal, browser
+- maybe use https://github.com/dluxemburg/reveal-run-in-terminal
+- maybe write a xrandr wrapper that automatically
+  - mirrors the main screen to the projector (for live coding) with the best common resolution
+  - two screen mode, using the max resolution supported by both screens
+  to reduce setup hassle
+* presentation notes
+- koa1 vs koa2 -> I guess with firefox supporting asnyc+await -> koa2
+- async+await -> always uses *native* promises -> bad perf compared to heavily optimized bluebird
+  - though we use native promises and don't have any perf probs so far
+- presentation style: example webapplication walkthrough
+  - show the parts: index handler, session middleware, logging middleware ...
+* presentation slides & structure
+** introduction
+- intro, creds
+  - name job
+  - use koa in production
+- simple example
+    import Koa from 'koa';
+
+    const app = new Koa();
+
+    app.use(function * () {
+      this.body = 'hello koa';
+    });
+
+    app.listen(8080);
+- why
+  - event-driven suits the domain of web backends perfectly
+  - last year, after some stagnation, nodejs + io.js merged, now we're almost at nodejs v7!
+  - because ES6 generators came around, obsoleting the callback/Promise style required for a new approach
+** concepts & patterns
+- handlers
+  - reading requests: headers,
+  - creating responses: text, json
+- routes
+  - via koa-router
+- middleware
+  - like express
+  - how it works, yield next, onion style
+  - example: request logging, metric
+- error handling with yield
+  - example: error-logger, 500 page
+- libraries: session
+- project layout
+* opinions
+** nice
+- generators/async all over the place -> linear, non-blocking control flow!
+- super-compact middlewares and handlers, easily combinable
+- libraries (session, csrf-protection ...) are defined as middlewares
+  - easy to plug them into your app
+- everything you need to handle requests and create responses
+- not limited
+  - exposes node internal request/response objects
+** complicated
+- error handling pattern:
+    try {
+        yield next;
+    } catch (e) {
+        if (!(e instanceof MyError)) {
+            throw e;
+        }
+
+        // handle the error
+    }
+- you have to setup some things yourself:
+  - its more of a library, not a framework
+  - session, routing, caching, gzip, build commands
+  - though if you don't care about the details, picking libraries is easy:
+      $ npm install koa-generic-session --save --save-exact
+
+      import Session from 'koa-generic-session';
+
+      app.use(new Session());
+  - *body parsing* is not built-in
+    - allows you to deal with it yourself (streaming vs. instant read), we actually have a usecase as we proxy 90% of our requests
+    - but sucks if you just need to get started
+    - of course there are several ready to use middlewares
+** bad
+- huge context (object) full of methods
+      this.get('Request-Header');
+      this.set('Response-Header');
+      this.body = {foo: bar};
+      this.status = 404;
+  - where to put you own request state?
+    `this.iHopeNobodyElseWillUseThatName = state` - whacky!
+  - what belongs to the request, what to the response
+    - `this.body`
+    - `this.headers`
+    - to be fair, the context object bundles this.request and this.response methods for brewity
+      - u get used to it after a while
+      - but coming back to a project - you need to constantly check the documentation or rely on your ide
+  - inconsistent:
+    - this.set()/get() for headers but
+    - this.cookies.set()/get() for cookies
+- fairly heavy use of dynamic setters and getters (__defineSetter__) in libraries
+    e.g.: koa.session
+
+    this.session = {foo: bar} // what does this line do? where do find its definition?
+      - it may be as buried as `unrelatedVariableName.__defineSetter__(hardToFindOptions.key)` in an already complicated source
+      - I wrote my own session middleware because of this
