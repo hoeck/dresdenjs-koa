@@ -1,0 +1,24 @@
+{
+  "name": "dresdenjs-koa",
+  "version": "1.0.0",
+  "description": "Slides and demo server for a Dresdenjs presentation about Koa",
+  "scripts": {
+    "build": "babel src --out-dir build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoeck/dresdenjs-koa.git"
+  },
+  "author": "Erik Söhnel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hoeck/dresdenjs-koa/issues"
+  },
+  "homepage": "https://github.com/hoeck/dresdenjs-koa#readme",
+  "devDependencies": {
+    "babel-cli": "6.18.0",
+    "babel-preset-env": "0.0.7",
+    "babel-plugin-transform-es2015-modules-commonjs": "6.18.0",
+    "parallelshell": "2.0.0"
+  }
+}
