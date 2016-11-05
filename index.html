@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+	<meta charset="utf-8">
+
+	<title>dresdenjs: koa</title>
+
+	<meta name="description" content="A dresdenjs presentation about koajs, the next generation web framework for node.js">
+	<meta name="author" content="Erik Söhnel">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+	<link rel="stylesheet" href="/node_modules/reveal.js/css/reveal.css">
+	<link rel="stylesheet" href="/node_modules/reveal.js/css/theme/beige.css" id="theme">
+
+	<!-- Code syntax highlighting -->
+	<link rel="stylesheet" href="/node_modules/highlightjs/styles/github.css">
+
+        <!-- koa logo font -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Italiana&amp;subset=latin">
+
+        <style>
+            em {
+                color: #42affa;
+            }
+
+            /* undo normalize of revealjs theme for github highlightjs theme */
+            .reveal pre code span.hljs-keyword {
+              font-weight: bold;
+            }
+
+            /* reveal-code-focus */
+            .line { display: block; }
+            .line.focus { background: yellow; }
+
+            .reveal .slides section .fragment.current-visible {
+              opacity: 1;
+              visibility: visible;
+              display: none;
+            }
+
+            .reveal .slides section .fragment.current-visible.current-fragment {
+              display: block;
+            }
+
+            .reveal pre code {
+                font-size: 30px;
+                line-height: 1;
+            }
+        </style>
+    </head>
+    <body>
+	<div class="reveal">
+	    <div class="slides">
+                <section>
+                    <div style="font: 250px 'Italiana', sans-serif;">Koa</div>
+                    <div id="tagline">next generation web framework for node.js</div>
+                </section>
+                <section data-markdown="index.md"
+                         data-separator="^---"
+                         data-separator-vertical="^==="
+                         data-separator-notes="^Note:">
+                </section>
+            </div>
+        </div>
+
+	<script src="/node_modules/reveal.js/lib/js/head.min.js"></script>
+	<script src="/node_modules/reveal.js/js/reveal.js"></script>
+
+	<script>
+
+	    // Full list of configuration options available at:
+	    // https://github.com/hakimel/reveal.js#configuration
+	    Reveal.initialize({
+	    controls: true,
+	    progress: true,
+	    history: true,
+	    center: true,
+
+	    transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+	    // Optional reveal.js plugins
+	    dependencies: [
+
+	      { src: '/node_modules/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+	      { src: '/node_modules/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+	      { src: '/node_modules/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+	      { src: '/node_modules/reveal.js/plugin/zoom-js/zoom.js', async: true },
+	      { src: '/node_modules/reveal.js/plugin/notes/notes.js', async: true },
+
+	      { src: '/node_modules/highlightjs/highlight.pack.js' },
+              { src: '/node_modules/reveal-code-focus/reveal-code-focus.js', async: true, callback: function() { RevealCodeFocus(); }}
+	    ]
+	    });
+
+	</script>
+    </body>
+</html>

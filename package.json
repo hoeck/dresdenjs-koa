@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "Slides and demo server for a Dresdenjs presentation about Koa",
   "scripts": {
-    "build": "babel src --out-dir build"
+    "build": "babel src --out-dir build",
+    "build-watch": "babel src --out-dir build --watch",
+    "serve-watch": "supervisor --watch src --timestamp --no-restart-on exit build/app.js",
+    "dev": "parallelshell 'npm run build-watch' 'npm run serve-watch'",
+    "slides": "live-server --no-browser --port=8000 ."
   },
   "repository": {
     "type": "git",
@@ -17,8 +21,17 @@
   "homepage": "https://github.com/hoeck/dresdenjs-koa#readme",
   "devDependencies": {
     "babel-cli": "6.18.0",
-    "babel-preset-env": "0.0.7",
     "babel-plugin-transform-es2015-modules-commonjs": "6.18.0",
-    "parallelshell": "2.0.0"
+    "parallelshell": "2.0.0",
+    "supervisor": "0.11.0"
+  },
+  "dependencies": {
+    "highlightjs": "9.8.0",
+    "koa": "1.2.4",
+    "koa-generic-session": "1.11.3",
+    "koa-router": "5.4.0",
+    "live-server": "1.1.0",
+    "reveal-code-focus": "1.0.0",
+    "reveal.js": "3.3.0"
   }
 }
