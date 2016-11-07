@@ -44,6 +44,8 @@
   - like express
   - how it works, yield next, onion style
   - example: request logging, metric
+  - where to put you own request state?
+    `this.state`!
 - error handling with yield
   - example: error-logger, 500 page
 - libraries: session
@@ -87,8 +89,6 @@
       this.set('Response-Header');
       this.body = {foo: bar};
       this.status = 404;
-  - where to put you own request state?
-    `this.iHopeNobodyElseWillUseThatName = state` - whacky!
   - what belongs to the request, what to the response
     - `this.body`
     - `this.headers`
