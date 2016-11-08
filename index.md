@@ -2,7 +2,7 @@
 
 ---
 
-## What Is Koa?
+### What Is Koa?
 
 * it is a nodejs web framework
 * it uses generators/asnyc+await
@@ -10,21 +10,21 @@
 
 ---
 
-## Who Am I?
+### Who Am I?
 
 - Erik Söhnel
 - Javascript Dev at Lovoo
-- We use Koa in production
+- We use Koa in *production*
 
 ---
 
-## Setup
+### Setup
 
 `npm install --save koa`
 
 ---
 
-## Hello World
+### Hello World
 
 ```javascript
 import Koa from 'koa';
@@ -40,7 +40,7 @@ app.listen(3000);
 
 ---
 
-## Hello World, Asnychronous
+### Hello World, Asnychronous
 
 ```javascript
 import Koa from 'koa';
@@ -53,10 +53,12 @@ app.use(function * () { /* ... */ });
 app.listen(3000);
 ```
 
-Note: biggest selling point
+Note:
+* biggest selling point
+
 ---
 
-## Hello World, Asnychronous
+### Hello World, Asnychronous
 
 ```javascript
 // respond with the hackernews topstory
@@ -69,14 +71,17 @@ app.use(function * () {
 });
 ```
 
-Note: this is the main reason we chose Koa
-      we don't have any callback code in our nodejs project
+Note:
+* this is the main reason we chose Koa
+* we don't have any callback code in our nodejs project
+
 ---
 
 ![](assets/remove-all-the-callbacks.jpg) <!-- .element: style="transform: scale(2)" -->
 
-Note: I would have had a hard time without yield
-      but there is more
+Note:
+* I would have had a hard time without yield
+* but there is more ...
 
 ---
 
@@ -84,7 +89,7 @@ Note: I would have had a hard time without yield
 
 ---
 
-## Simple Request Handlers
+### Simple Request Handlers
 
 * koa wraps nodes req and res objects
 * all is done on the context object (`this` or `ctx`)
@@ -94,7 +99,7 @@ Note: I would have had a hard time without yield
 
 ---
 
-## Simple Request Handlers
+### Simple Request Handlers
 
 ```javascript
 app.use(function * () {
@@ -106,19 +111,21 @@ app.use(function * () {
     };
 });
 ```
+
 ---
 
-## Easy To Use Middlewares
+### Easy To Use Middlewares
 
 * used in express and other web frameworks
 * add behavior *around* request handlers
 * generators + middlewares -> win win win
 
-Note: express design team
+Note:
+* express design team
 
 ---
 
-## Easy To Use Middlewares
+### Easy To Use Middlewares
 
 ```javascript
 app.use(function * (next) {
@@ -132,7 +139,47 @@ app.use(function * (next) {
 
 ---
 
-## Middleware Example: logging
+### Passing Control
+
+```javascript
+app.use(function * outer (next) {
+    console.log('outer before');
+    yield next;
+    console.log('outer after')
+});
+
+app.use(function * inner (next) {
+    console.log('inner before');
+    yield next;
+    console.log('inner after')
+});
+
+app.use(function * handler () {
+    console.log('handler')
+});
+```
+
+<span class="fragment current-visible" data-code-focus="1"></span>
+<span class="fragment current-visible" data-code-focus="2"></span>
+<span class="fragment current-visible" data-code-focus="3"></span>
+<span class="fragment current-visible" data-code-focus="7"></span>
+<span class="fragment current-visible" data-code-focus="8"></span>
+<span class="fragment current-visible" data-code-focus="9"></span>
+<span class="fragment current-visible" data-code-focus="13"></span>
+<span class="fragment current-visible" data-code-focus="14"></span>
+<span class="fragment current-visible" data-code-focus="15"></span>
+<span class="fragment current-visible" data-code-focus="10"></span>
+<span class="fragment current-visible" data-code-focus="11"></span>
+<span class="fragment current-visible" data-code-focus="4"></span>
+<span class="fragment current-visible" data-code-focus="5"></span>
+<span class="fragment current-visible" data-code-focus=""></span>
+
+Note:
+* how are middlewares executed
+
+---
+
+### Middleware: logging
 
 ```javascript
 app.use(function * (next) {
@@ -144,7 +191,7 @@ app.use(function * (next) {
 
 ---
 
-## Middleware Example: error handling
+### Middleware: error handling
 
 ```javascript
 app.use(function * (next) {
@@ -160,11 +207,13 @@ app.use(function * (next) {
 });
 ```
 
-Note: readable javascript
-      we use exactly that pattern in practice (except for nicer error formatting)
+Note:
+* readable javascript
+* we use exactly that pattern in practice (except for nicer error formatting)
+
 ---
 
-## Middleware: Sessions
+### Middleware Library: Sessions
 
 ```javascript
 import session from 'koa-session-store';
@@ -174,11 +223,14 @@ app.keys = ['random secret'];
 app.use(session()); // session is a middleware
 ```
 
-Note: TODO: more examples of middleware?
+Note:
+* additional functionality is often provided through middlewares: csrf token protection, caching
+* no prepackaged middleware for koa
+* easy composition
 
 ---
 
-## Middleware: Routing
+### Middleware Library: Routing
 
 ```javascript
     import KoaRouter from 'koa-router';
@@ -192,5 +244,4 @@ Note: TODO: more examples of middleware?
     });
 ```
 
-Note: libraries are all middlewares
-      easy composition
+---
