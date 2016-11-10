@@ -12,7 +12,7 @@
 
 ### Who Am I?
 
-- Erik Söhnel
+- Andre Leubner
 - Javascript Dev at Lovoo
 - We use Koa in *production*
 
@@ -91,7 +91,7 @@ Note:
 
 ### Simple Request Handlers
 
-* koa wraps nodes req and res objects
+* Koa *wraps* nodes req and res objects
 * all is done on the context object (`this` or `ctx`)
 * request: `get()`, `cookies.get()`, `query`, `params`
 * response: `body`, `status`, `set()` for headers, `redirect()` and many more
@@ -244,4 +244,125 @@ Note:
     });
 ```
 
+Note:
+* that was basically it, from a documentation point of view
+* no some real-world experience
+
 ---
+
+# Experience
+
+Note:
+* use it in production for 3 months now
+* took around 4 months to move most logic from php to koa
+* share some experiences
+
+---
+
+### file layout
+
+```
+core       .. logging, metrics, config
+handlers   .. stateless modules implementing request handlers
+services   .. stateful modules, e.g. db connections
+views      .. templates
+index.js   .. Koa app definition
+```
+
+Note:
+* this works for mid-sized codebases like ours
+* having a directory-per-component approach is better for larger projects
+
+---
+
+### unit tests
+
+* mockery-next for mocking modules
+* jasmine
+
+---
+
+### service tests
+
+* Koa - mock HTTP APIs
+* redmock - mock redis server
+* jasmine
+* custom gluecode to run the app with custom configuration
+
+---
+
+### Performance
+
+* at peak, we're getting 77 reqs per second for one Koa instance
+* almost all of them are proxied to our php api backend
+* avg latency is 65ms, .99 is 500ms
+* ~25% cpu usage
+
+Note:
+* we never had to tune the app for performance so far
+
+---
+
+### some bad things
+
+* its hard to assess the quality of some Koa library
+* sometimes there are competing middleware libraries
+* inconsistent context object: this.get() for headers vs this.cookies.get() for cookies
+
+Note:
+* e.g. koa-generic-session: : sphaghetti like code, hard to read or extend, not maintained, hard to understand __defineGetter usage
+* koa-router is nice and works well though
+* we wrote our own session middleware
+* generally, there seem to be no good session middlewares
+
+---
+
+### and the good things
+
+```javascript
+function* stripePurchaseHandler (next) {
+    // ...
+
+    const [bodyData, selfUser, userInfo] = yield [
+        bodyParser.parseJson(this),
+        userRequest.getSelfUser(requestInfo),
+        userRequest.getUserInfo(this.session.userId)
+    ];
+
+    // ...
+
+    try {
+        yield goPaymentGateway.call(/* ... */);
+    } catch (error) { /* ... */ }
+}
+```
+
+Note:
+* thats why we chose it
+* co-worker recommended it
+* lots of async calls to fetch data
+* zero nesting!
+* simple error handling (no need to `if (err) { return err; }`)
+
+---
+
+### more good things
+
+* composable middlewares
+* total freedom - pick what you need or write it yourself
+* almost no magic in Koa itself
+
+---
+
+### when to use it?
+
+* if you need the offered flexibility
+* or if your app is more a microservice
+* probably not a good choice for a stock database + form driven website
+* (its not a web framework)
+
+---
+
+## any questions?
+
+thanks for listening
